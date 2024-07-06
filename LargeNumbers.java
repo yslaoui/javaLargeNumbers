@@ -1,5 +1,6 @@
 package largeNumbers;
 
+import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
@@ -7,6 +8,8 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.stage.Stage;
+
+import java.util.Random;
 
 public class LargeNumbers extends Application {
     @Override
@@ -20,6 +23,24 @@ public class LargeNumbers extends Application {
         XYChart.Series<Number, Number> series = new XYChart.Series<>();
         ObservableList<XYChart.Data<Number, Number>> data = series.getData();
 
+        new AnimationTimer() {
+            long previous = 0;
+            int sum = 0;
+            int count = 0;
+            final long second = 1000000000L;
+            Random random = new Random();
+            @Override
+            public void handle(long current) {
+                if (current - previous < second / 10) {
+                    return;
+                }
+                sum += 1 + random.nextInt(6);
+                count += 1;
+                previous = current;
+                data.add(new XYChart.Data<>(count, 1.0 * sum / count));
+                System.out.println(sum / count);
+            }
+        }.start();
 
 
         chart.getData().add(series);
@@ -34,3 +55,6 @@ public class LargeNumbers extends Application {
         launch(LargeNumbers.class);
     }
 }
+
+
+
